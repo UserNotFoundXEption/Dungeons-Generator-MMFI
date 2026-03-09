@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Enemy
+  - Treasure
+  - Key
+  - Obstacle
+  - EnemyProjectile
+  - MageOrbital
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Obstacles
+  - Water
+  - UI
+  - Collectible
+  - Projectile
+  - Player
+  - Enemy
+  - EnemyProjectile
+  - Visuals
+  - MageOrbital
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 4014305949
+    locked: 0
+  - name: Obstacles
+    uniqueID: 1444949497
+    locked: 0
+  - name: Collectibles
+    uniqueID: 4135690261
+    locked: 0
+  - name: Projectiles
+    uniqueID: 2591111137
+    locked: 0
+  - name: Player
+    uniqueID: 669328389
+    locked: 0
+  - name: EProjectiles
+    uniqueID: 3358426375
+    locked: 0
+  - name: Enemies
+    uniqueID: 334545179
+    locked: 0
+  - name: HUD
+    uniqueID: 242310717
+    locked: 0
