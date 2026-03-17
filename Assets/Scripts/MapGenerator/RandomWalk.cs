@@ -3,14 +3,12 @@ public class RandomWalk
     readonly int[][] table;
     readonly int xSize;
     readonly int ySize;
-    readonly System.Random random;
 
     public RandomWalk(int[][] table)
     {
         this.table = table;
         this.xSize = table.Length;
         this.ySize = table[0].Length;
-        random = new System.Random();
     }
 
     public void SendWalker(int x, int y, int walkDistance, int iterations, int chanceForHorizontal, bool continueAfterIteration)
@@ -25,13 +23,13 @@ public class RandomWalk
         int direction;
         for (int i = 0; i < walkDistance; i++)
         {
-            if (random.Next(0, 100) < chanceForHorizontal)
+            if (UnityEngine.Random.Range(0, 100) < chanceForHorizontal)
             {
-                direction = random.Next(1, 3) * 2;
+                direction = UnityEngine.Random.Range(1, 3) * 2;
             }
             else
             {
-                direction = random.Next(1, 3) * 2 - 1;
+                direction = UnityEngine.Random.Range(1, 3) * 2 - 1;
             }
 
             newX = U.NX(newX, direction, 1);

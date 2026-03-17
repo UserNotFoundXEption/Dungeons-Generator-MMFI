@@ -30,6 +30,7 @@ public class MapGenerator : MonoBehaviour
     // 0 - sciana, 1 - przestrzen, 2 - drzwi, 3 - korytarz
     public int[][] Generate()
     {
+        UnityEngine.Random.InitState(69);
         dungeonTable = U.NewTable(n, n);
         MakeDungeon();
         return dungeonTable;
