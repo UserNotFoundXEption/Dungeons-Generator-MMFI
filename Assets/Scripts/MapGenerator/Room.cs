@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
@@ -20,33 +21,30 @@ public class Room
 
     public int[][] Create(bool reshapeCut, int chanceForHorizontal, bool continueAfterIteration, int cellFixIterations, bool cellRounding, int holesRadius)
     {
-        do
-        {
-            safetyBreak++;
-            FillTable(table);
-            if (reshapeCut)
-            {
-                ReshapeCut();
-            }
-            if (holesRadius > -1)
-            {
-                if (holesRadius == 0)
-                {
-                    holesRadius = Math.Min(xSize, ySize) / 3 - 2;
-                }
-                MakeHoles(holesRadius);
-            }
-            if (chanceForHorizontal != -1)
-            {
-                ReshapeRandomWalk(chanceForHorizontal, continueAfterIteration);
-            }
-            FixWithCellularAutomaton(cellFixIterations, cellRounding);
-        } while (!VerifyRoomIntegrity() && safetyBreak != safetyBreakLimit);
+        FillTable(table);
 
-        if (safetyBreak == safetyBreakLimit)
+        if (reshapeCut)
         {
-            Debug.LogError("Can't make intergral room");
+            ReshapeCut();
         }
+
+        if (chanceForHorizontal != -1)
+        {
+            ReshapeRandomWalk(chanceForHorizontal, continueAfterIteration);
+        }
+
+        FixWithCellularAutomaton(cellFixIterations, cellRounding);
+
+        if (holesRadius > -1)
+        {
+            if (holesRadius == 0)
+            {
+                holesRadius = (int)(Math.Min(xSize, ySize) / 5f) + 3;
+            }
+            MakeHoles(holesRadius);
+        }
+
+        EnsureRoomIntegrity();
 
         return table;
     }
@@ -144,24 +142,20 @@ public class Room
 
     private void FixWithCellularAutomaton(int iterations, bool rounding)
     {
-        CellularAutomaton cellAutRef = new(7, 8, rounding ? 4 : 1, 8, 1);
+        CellularAutomaton cellAutRef = new(6, 8, rounding ? 3 : 1, 8, 1);
         cellAutRef.SetTable(table);
-        for (int i = 0; i < iterations; i++)
-        {
-            table = cellAutRef.GetNewIteration();
-        }
+        table = cellAutRef.Run(iterations);
     }
 
     private void MakeHoles(int R)
     {
-        double area = Math.Pow(R * 2 + 1, 2) - 1;
-        CellularAutomaton cellAutRef = new(0, 0, 1, (int)(area * 0.9), R);
+        float area = Mathf.Pow(R * 2 + 1, 2) - 1;
+        CellularAutomaton cellAutRef = new(2137, 2137, 1, (int)(area * 0.8f), R, true);
         cellAutRef.SetTable(table);
-        cellAutRef.SetTable(table);
-        table = cellAutRef.GetNewIteration();
+        table = cellAutRef.Run(10);
     }
 
-    private bool VerifyRoomIntegrity()
+    private void EnsureRoomIntegrity()
     {
         int[][] verificationTable = U.CopyTable(table);
         int x, y;
@@ -172,8 +166,8 @@ public class Room
         } while (verificationTable[x][y] != 1);
         verificationTable[x][y] = 2;
 
-        int tilesFound = 1;
-        while (tilesFound > 0)
+        int tilesFound;
+        do
         {
             tilesFound = 0;
             for (x = 0; x < xSize; x++)
@@ -198,7 +192,7 @@ public class Room
                     }
                 }
             }
-        }
+        } while (tilesFound > 0);
 
         for (x = 0; x < xSize; x++)
         {
@@ -206,10 +200,35 @@ public class Room
             {
                 if (verificationTable[x][y] == 1)
                 {
-                    return false;
+                    ClearRoomUnintegrity(verificationTable);
                 }
             }
         }
-        return true;
+    }
+
+    private void ClearRoomUnintegrity(int[][] verificationTable)
+    {
+        int totalMass = U.GetMass(table);
+        int unintegrityMass = U.GetMass(verificationTable);
+        int numberToClear;
+        if (unintegrityMass < totalMass / 2)
+        {
+            numberToClear = 2;
+        }
+        else
+        {
+            numberToClear = 1;
+        }
+
+        for (int x = 0; x < xSize; x++)
+        {
+            for (int y = 0; y < ySize; y++)
+            {
+                if (verificationTable[x][y] == numberToClear)
+                {
+                    table[x][y] = 0;
+                }
+            }
+        }
     }
 }

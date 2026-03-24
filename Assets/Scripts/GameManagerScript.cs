@@ -67,7 +67,8 @@ public class GameManagerScript : MonoBehaviour
 
     void Update()
     {
-        if (!Physics2D.OverlapBox(new Vector2(n / 2, n / 2), new Vector2(n, n), 0, enemyLayer))
+        if (!Physics2D.OverlapBox(new Vector2(n / 2, n / 2), new Vector2(n, n), 0, enemyLayer)
+            && randomEnemiesCount + enemiesPerRoom > 0)
         {
             SceneManager.LoadScene("Win");
         }

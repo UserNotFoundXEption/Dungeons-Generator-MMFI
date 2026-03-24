@@ -1,25 +1,21 @@
 using System;
+using System.Numerics;
+using UnityEngine;
 
 public class Utilities
 {
-    public static int NX(int oldX, int direction, int step)
+    public static int NX(int oldX, int direction, int step = 1)
     {
-        return direction % 2 == 0 ? oldX - (direction - 3) * step : oldX;
-    }   // prawo: x - 2 + 3 lewo: x - 4 + 3
-
-    public static int NX(int oldX, int direction)
-    {
-        return direction % 2 == 0 ? oldX - direction + 3 : oldX;
+        if (direction == 2) return oldX + step;
+        if (direction == 4) return oldX - step;
+        return oldX;
     }
 
-    public static int NY(int oldY, int direction, int step)
+    public static int NY(int oldY, int direction, int step = 1)
     {
-        return direction % 2 == 1 ? oldY - direction + 2 : oldY;
-    }   // gora: y - 1 + 2 dol: y - 3 + 2
-
-    public static int NY(int oldY, int direction)
-    {
-        return direction % 2 == 1 ? oldY - direction + 2 : oldY;
+        if (direction == 1) return oldY + step;
+        if (direction == 3) return oldY - step;
+        return oldY;
     }
 
     public static int[][] NewTable(int xSize, int ySize)
@@ -111,8 +107,8 @@ public class Utilities
     {
         bool left = x > 0 && table[x - 1][y] == neighbor;
         bool right = x < table.Length - 1 && table[x + 1][y] == neighbor;
-        bool up = y > 0 && table[x][y - 1] == neighbor;
-        bool down = y < table[0].Length - 1 && table[x][y + 1] == neighbor;
+        bool down = y > 0 && table[x][y - 1] == neighbor;
+        bool up = y < table[0].Length - 1 && table[x][y + 1] == neighbor;
         return left || right || up || down;
     }
 
@@ -124,6 +120,48 @@ public class Utilities
             result += ", " + table[i];
         }
         return result;
+    }
+
+    public static Vector2Int GetMassCenter(int[][] table)
+    {
+        int xSize = table.Length;
+        int ySize = table[0].Length;
+        Vector2Int sum = Vector2Int.zero;
+        int counter = 0;
+
+        for (int x = 0; x < xSize; x++)
+        {
+            for (int y = 0; y < ySize; y++)
+            {
+                if (table[x][y] > 0)
+                {
+                    sum += new Vector2Int(x, y);
+                    counter++;
+                }
+            }
+        }
+
+        return sum / counter;
+    }
+
+    public static int GetMass(int[][] table)
+    {
+        int xSize = table.Length;
+        int ySize = table[0].Length;
+        int counter = 0;
+
+        for (int x = 0; x < xSize; x++)
+        {
+            for (int y = 0; y < ySize; y++)
+            {
+                if (table[x][y] > 0)
+                {
+                    counter++;
+                }
+            }
+        }
+
+        return counter;
     }
 }
 

@@ -181,8 +181,16 @@ public class Doors
             {
                 y = U.NY(y, moveDirection, 1);
             }
-            neighbor1 = dungeonTable[U.NX(x, neighbor1Direction)][U.NY(y, neighbor1Direction)];
-            neighbor2 = dungeonTable[U.NX(x, neighbor2Direction)][U.NY(y, neighbor2Direction)];
+
+            try
+            {
+                neighbor1 = dungeonTable[U.NX(x, neighbor1Direction)][U.NY(y, neighbor1Direction)];
+                neighbor2 = dungeonTable[U.NX(x, neighbor2Direction)][U.NY(y, neighbor2Direction)];
+            }
+            catch
+            {
+                break;
+            }
         }
 
         return new Vector2Int(x, y);
